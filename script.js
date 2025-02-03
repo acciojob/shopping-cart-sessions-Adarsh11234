@@ -1,6 +1,4 @@
-// This is the boilerplate code given for you
-// You can modify this code
-// Product data
+
 const products = [
   { id: 1, name: "Product 1", price: 10 },
   { id: 2, name: "Product 2", price: 20 },
@@ -9,30 +7,43 @@ const products = [
   { id: 5, name: "Product 5", price: 50 },
 ];
 
-// DOM elements
-const productList = document.getElementById("product-list");
 
-// Render product list
 function renderProducts() {
-  products.forEach((product) => {
-    const li = document.createElement("li");
-    li.innerHTML = `${product.name} - $${product.price} <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>`;
+  const productList = document.getElementById('product-list');
+  products.forEach(product => {
+    const li = document.createElement('li');
+    li.innerHTML = `${product.name} - $${product.price} <button onclick="addToCart(${product.id})">Add to Cart</button>`;
     productList.appendChild(li);
   });
 }
 
-// Render cart list
-function renderCart() {}
 
-// Add item to cart
-function addToCart(productId) {}
+function addToCart(productId) {
+  const product = products.find(p => p.id === productId);
+  let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+  cart.push(product);
+  sessionStorage.setItem('cart', JSON.stringify(cart));
+  renderCart();
+}
 
-// Remove item from cart
-function removeFromCart(productId) {}
+function renderCart() {
+  const cartList = document.getElementById('cart-list');
+  cartList.innerHTML = '';
+  const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+  cart.forEach(item => {
+    const li = document.createElement('li');
+    li.innerHTML = `${item.name} - $${item.price}`;
+    cartList.appendChild(li);
+  });
+}
 
-// Clear cart
-function clearCart() {}
 
-// Initial render
+function clearCart() {
+  sessionStorage.removeItem('cart');
+  renderCart();
+}
+
+document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
+
 renderProducts();
 renderCart();
